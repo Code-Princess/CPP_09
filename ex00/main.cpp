@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:47:37 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/03/13 23:44:04 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/03/14 18:44:09 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,11 @@ int main (int argc, char* argv[])
 	// }
 	// else
 	// {
-	// 	BitcoinExchange btc;
+	// 	BitcoinExchange btc(argv[1]);
 	// }
 	// return 0;
 
-	BitcoinExchange btc;
+	BitcoinExchange btc("input.txt");
+	btc.readInputLineByLine();
 	return 0;
 }

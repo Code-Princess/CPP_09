@@ -2,5 +2,5 @@
 *.o
 main
 btc
-input.txt
+input*.txt
 data*.csv
