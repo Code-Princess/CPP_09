@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:46:59 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/04/28 22:36:00 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/04/28 23:42:02 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ BitcoinExchange::BitcoinExchange()
 BitcoinExchange::BitcoinExchange(const std::string dataFile)
 {
 	parseData(dataFile);
-// printData();
-		std::cout << "_data map stored successfully" << std::endl;
 }
 
 BitcoinExchange::~BitcoinExchange()
@@ -110,7 +108,7 @@ void BitcoinExchange::parseInputLine(std::string nextLine)
 {
 	std::string		date,value;
 	_inputDate = "";
-	_inputValue = NULL;
+	_inputValue = std::nullopt;
 	nextLine.erase(std::remove(nextLine.begin(), nextLine.end(), ' '), nextLine.end());
 	std::stringstream 	ss(nextLine);
 	
@@ -120,49 +118,21 @@ void BitcoinExchange::parseInputLine(std::string nextLine)
 			_inputDate = date;
 		else
 			std::cerr << "Error: invalid date: " << date << std::endl;
-		
-		if (!value.empty())
+
+		if (value.empty())
+			std::cerr << "Error: empty value" << std::endl;
+		else
 		{
 			if (isUnsignedInt(value))
 				_inputValue = convertToUnsignedInt(value);
 			else
-			{
 				_inputValue = convertToFloat(value);
-			}
-			// try
-			// {
-			// 	_inputValue = std::stod(value);
-			
-			// }
-			// catch(const std::exception& e)
-			// {
-			// 	std::cerr << "Exception caught: " << e.what() << std::endl;
-			// }
+			if (!isValidRange(_inputValue.value()))
+				return;
 		}
-		else
-			std::cerr << "Error: value is empty" << std::endl;
 	}
-	if (!_inputDate.empty() && _inputValue != NULL)
-	{
+	if (!_inputDate.empty() && _inputValue.has_value())
 		printInput();
-	}
-	
-}
-
-template <typename T>
-bool BitcoinExchange::isInRange(T value)
-{
-	if (value >= 0 && value <= 1000)
-	{
-		return true;
-	}
-	else
-	{
-		std::cerr << "Error: " << value << " not in range [0, 1000]" << std::endl;
-		_inputValue = std::nan("");
-if (std::isnan(_inputValue)) printInput();
-		return false;
-	}
 }
 
 void BitcoinExchange::printData()
@@ -177,10 +147,7 @@ void BitcoinExchange::printData()
 
 void BitcoinExchange::printInput()
 {
-	if (std::isnan(_inputValue))
-		std::cout << _inputDate << " | " << "nan" << std::endl;
-	else
-		std::cout << _inputDate << " | " << _inputValue << std::endl;
+	std::cout << _inputDate << " | " << _inputValue.value() << std::endl;
 }
 
 void openFile(const std::string& dataFile, 	std::ifstream& file)
@@ -235,7 +202,6 @@ bool isUnsignedInt(std::string nbrStr)
 unsigned int convertToUnsignedInt(std::string nbr)
 {
 	unsigned int unsignedIntVal;
-	
 	try
 	{
 		unsignedIntVal = static_cast<unsigned int>(std::stoul(nbr));
@@ -244,8 +210,6 @@ unsigned int convertToUnsignedInt(std::string nbr)
 	{
 		std::cerr << "Exception caught: " << e.what() << std::endl;
 	}
-	// if (!isInRange(unsignedIntVal))
-		std::cerr << "Error: conversion failed1" << std::endl;
 	return unsignedIntVal;
 }
 
@@ -260,7 +224,17 @@ float convertToFloat(std::string nbrStr)
 	{
 		std::cerr << "Exception caught: " << e.what() << std::endl;
 	}
-	// if (!isInRange(floatVal))
-		std::cerr << "Error: conversion failed2" << std::endl;
 	return floatVal;
+}
+
+template <typename T>
+bool isValidRange(T value)
+{
+	if (value >= 0 && value <= 1000)
+		return true;
+	else
+	{
+		std::cerr << "Error: " << value << " not in range [0, 1000]" << std::endl;
+		return false;
+	}
 }

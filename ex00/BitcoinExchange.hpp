@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:46:49 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/04/28 22:01:01 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/04/28 23:25:11 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ class BitcoinExchange
 private:
 	std::map<std::string, double>	_data;
 	std::string						_inputDate;
-	float 							_inputValue;
+	std::optional<float> 			_inputValue;
 
 		
 	void parseData(const std::string& dataFile);
@@ -30,9 +30,7 @@ private:
 	
 	void readInputLineByLine(const std::string& inputFile);
 	void parseInputLine(std::string nextLine);
-	
-	template <typename T>
-	bool isInRange(T value);
+
 	
 	void printData();
 	void printInput();
@@ -51,9 +49,13 @@ public:
 
 	void calcTurnOver(const std::string& inputFile);
 };
+
 void openFile(const std::string& dataFile, 	std::ifstream& file);
 bool isLeapYear(int year);
 bool isValidDate(std::string date);
+template <typename T>
+bool isValidRange(T value);
+bool isUnsignedInt(std::string nbrStr);
 unsigned int convertToUnsignedInt(std::string nbr);
 float convertToFloat(std::string nbrStr);
 
