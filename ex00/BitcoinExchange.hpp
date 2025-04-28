@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:46:49 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/03/14 22:05:33 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/04/28 20:44:51 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,36 +21,40 @@ class BitcoinExchange
 {
 private:
 	std::map<std::string, double>	_data;
-	const std::string				_inputFile;
 	std::string						_inputDate;
 	float 							_inputValue;
+
+		
+	void parseData(const std::string& dataFile);
+	void parseDataLine(const std::string& nextLine);
 	
-	bool _parseInputLine(std::string nextLine);	
+	void readInputLineByLine(const std::string& inputFile);
+	void parseInputLine(std::string nextLine);
+	
 	template <typename T>
-	bool _isInRange(T value);
-	unsigned int _convertToUnsignedInt(std::string nbr);
-	float _convertToFloat(std::string nbrStr);
-	bool _parseDataLine(const std::string& nextLine);
-	void _printData();
-	void _printInput();
+	bool isInRange(T value);
+	
+	void printData();
+	void printInput();
 public:
 	BitcoinExchange();
-	BitcoinExchange(const std::string inputFile);
-	// BitcoinExchange(const BitcoinExchange& other);
-	// BitcoinExchange& operator=(const BitcoinExchange& other);
+	BitcoinExchange(const std::string dataFile);
 	~BitcoinExchange();
 	
+	BitcoinExchange(const BitcoinExchange& other) = delete;
+	BitcoinExchange& operator=(const BitcoinExchange& other) = delete;
+
 	// std::string getInputDate();
 	// float getInputValue();
 	
-
-	bool parseData(const std::string dataFile);
-	std::map<std::string, double> getData();
-	bool readInputLineByLine();
 	// float getBitcoinExchangeRate(std::string date);
-	
+
+	void calcTurnOver(const std::string& inputFile);
 };
 
-
+bool isValidDate(std::string date);
+bool isLeapYear(int year);
+unsigned int convertToUnsignedInt(std::string nbr);
+float convertToFloat(std::string nbrStr);
 
 #endif

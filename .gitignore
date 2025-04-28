@@ -4,3 +4,6 @@ main
 btc
 input*.txt
 data*.csv
+outfile
+.DS_Store
+../.DS_Store

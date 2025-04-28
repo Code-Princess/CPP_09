@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:46:59 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/03/14 22:51:32 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/04/28 20:47:40 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,51 +21,51 @@ BitcoinExchange::BitcoinExchange()
 	
 }
 
-BitcoinExchange::BitcoinExchange(const std::string inputFile)
-	:	_inputFile(inputFile)
+BitcoinExchange::BitcoinExchange(const std::string dataFile)
 {
-	if (parseData("data.csv"))
-		std::cout << "_data stored successfully" << std::endl;
-	else
-		std::cerr << "Error: parseData() failed." << std::endl;
+	parseData(dataFile);
+// printData();
+		std::cout << "_data map stored successfully" << std::endl;
 }
 
-// BitcoinExchange::BitcoinExchange(const BitcoinExchange& other)
-// {
-	
-// }
-// BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& other)
-// {
-	
-// }
-	
 BitcoinExchange::~BitcoinExchange()
 {
 }
 
-// std::string BitcoinExchange::getInputDate()
-// {
-// 	return _inputDate;
-// }
+void BitcoinExchange::calcTurnOver(const std::string& inputFile)
+{
+	readInputLineByLine(inputFile);
+}
 
-// float BitcoinExchange::getInputValue()
-// {
-// 	return _inputValue;
-// }
-
-bool openFile(const std::string& dataFile, 	std::ifstream& file)
+void openFile(const std::string& dataFile, 	std::ifstream& file)
 {
 	file.open(dataFile);
 	if (!file.is_open())
-	{
-		std::cerr << "Error: open file  " << dataFile << " failed!" << std::endl;
-		return false;
-	}
-	else
-		return true;
+		throw std::runtime_error("open file failed!");
 }
 
-bool BitcoinExchange::_parseDataLine(const std::string& nextLine)
+void BitcoinExchange::parseData(const std::string& dataFile)
+{
+	std::ifstream	file;
+	std::string 	nextLine;
+	bool			isFirstLine;
+	
+	isFirstLine = true;
+
+	openFile(dataFile, file);
+	while (std::getline(file, nextLine))
+	{
+		if (isFirstLine)
+		{
+			isFirstLine = false;
+			continue;	
+		}
+		parseDataLine(nextLine);
+	}
+	file.close();
+}
+
+void BitcoinExchange::parseDataLine(const std::string& nextLine)
 {
 	std::string			date;
 	std::string			exchangeRateStr;
@@ -76,110 +76,44 @@ bool BitcoinExchange::_parseDataLine(const std::string& nextLine)
 		try
 		{
 			exchangeRate = std::stod(exchangeRateStr);
-			_data.insert({date, exchangeRate});
+			if (isValidDate(date))
+			{
+				if(!(_data.insert({date, exchangeRate})).second)
+				std::cerr << "duplicate date! taken: " << date << \
+					"," << exchangeRate << std::endl;
+			}
+			else
+				std::cerr << "invalid date: " << date << std::endl;
+			
 		}
 		catch(const std::exception& e)
 		{
 			std::cerr << "Exception caught: " << e.what() << std::endl;
-			return false;
 		}
 	}
-	return true;
 }
 
-bool BitcoinExchange::parseData(const std::string dataFile)
+void BitcoinExchange::readInputLineByLine(const std::string& inputFile)
 {
-	std::ifstream	file;
-	std::string 	nextLine;
-	bool			isFirstLine;
+	bool 				isFirstLine;
+	std::ifstream		file;
+	std::string 		nextLine;
 	
 	isFirstLine = true;
-
-	if (openFile(dataFile, file))
+	openFile(inputFile, file);
+	while (std::getline(file, nextLine))
 	{
-		while (std::getline(file, nextLine))
+		if (isFirstLine)
 		{
-			if (isFirstLine)
-			{
-				isFirstLine = false;
-				continue;	
-			}
-			if (!_parseDataLine(nextLine))
-				std::cerr << "Error: parseLine() failed" << std::endl;
+			isFirstLine = false;
+			continue;
 		}
-		file.close();
-		return true;
+		parseInputLine(nextLine);
 	}
-	else
-		return false;
+	file.close();
 }
 
-std::map<std::string, double> BitcoinExchange::getData()
-{
-	return _data;
-}
-
-template <typename T>
-bool BitcoinExchange::_isInRange(T value)
-{
-	if (value >= 0 && value <= 1000)
-	{
-		return true;
-	}
-	else
-	{
-		std::cerr << "Error: " << value << " not in range [0, 1000]" << std::endl;
-		_inputValue = std::nan("");
-if (std::isnan(_inputValue)) _printInput();
-		return false;
-	}
-	
-}
-
-bool isUnsignedInt(std::string nbrStr)
-{
-	for (char c : nbrStr) 
-	{
-		if (!std::isdigit(c)) 
-			return false;
-	}
-	return true;
-}
-
-unsigned int BitcoinExchange::_convertToUnsignedInt(std::string nbr)
-{
-	unsigned int unsignedIntVal;
-	
-	try
-	{
-		unsignedIntVal = static_cast<unsigned int>(std::stoul(nbr));
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << "Exception caught: " << e.what() << std::endl;
-	}
-	if (!_isInRange(unsignedIntVal))
-		std::cerr << "Error: conversion failed1" << std::endl;
-	return unsignedIntVal;
-}
-
-float BitcoinExchange::_convertToFloat(std::string nbrStr)
-{
-	float floatVal;
-	try
-	{
-		floatVal = std::stof(nbrStr);
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << "Exception caught: " << e.what() << std::endl;
-	}
-	if (!_isInRange(floatVal))
-		std::cerr << "Error: conversion failed2" << std::endl;
-	return floatVal;
-}
-
-bool BitcoinExchange::_parseInputLine(std::string nextLine)
+void BitcoinExchange::parseInputLine(std::string nextLine)
 {
 	std::string		valStr;
 	nextLine.erase(std::remove(nextLine.begin(), nextLine.end(), ' '), nextLine.end());
@@ -191,16 +125,15 @@ bool BitcoinExchange::_parseInputLine(std::string nextLine)
 		if (valStr.empty())
 		{
 			std::cerr << "Error: value is empty" << std::endl;
-			return false;
 		}
 		else
 		{
 			if (isUnsignedInt(valStr))
-				_inputValue = _convertToUnsignedInt(valStr);
+				_inputValue = convertToUnsignedInt(valStr);
 			else
 			{
 std::cout << valStr << "\n";
-				_inputValue = _convertToFloat(valStr);
+				_inputValue = convertToFloat(valStr);
 std::cout << _inputValue << "\n";
 			}
 			// else
@@ -210,57 +143,113 @@ std::cout << _inputValue << "\n";
 			// }
 		}
 	}
-_printInput();
-	return true;
+printInput();
 }
 
-bool BitcoinExchange::readInputLineByLine()
+template <typename T>
+bool BitcoinExchange::isInRange(T value)
 {
-	bool 				isFirstLine;
-	std::ifstream		file;
-	std::string 		nextLine;
-	
-	
-	isFirstLine = true;
-	
-	if (openFile(_inputFile, file))
+	if (value >= 0 && value <= 1000)
 	{
-		while (std::getline(file, nextLine))
-		{
-			if (isFirstLine)
-			{
-				isFirstLine = false;
-				continue;	
-			}
-			if (!_parseInputLine(nextLine))
-			{
-				std::cerr << "Error: parseInputLine() failed" << std::endl;
-				return false;
-			}
-			
-		}
-		file.close();
 		return true;
 	}
 	else
-		return false;
-	
-}
-
-void BitcoinExchange::_printData()
-{
-	std::cout << "_data:" << std::endl;
-	for (const auto& pair : _data)
 	{
-		std::cout << std::fixed << std::setprecision(2);
-		std::cout << pair.first << ", " << pair.second << std::endl;
+		std::cerr << "Error: " << value << " not in range [0, 1000]" << std::endl;
+		_inputValue = std::nan("");
+if (std::isnan(_inputValue)) printInput();
+		return false;
 	}
 }
 
-void BitcoinExchange::_printInput()
+void BitcoinExchange::printData()
+{
+	std::cout << "_data map:" << std::endl;
+	for (const auto& pair : _data)
+	{
+		std::cout << std::fixed << std::setprecision(2);
+		std::cout << pair.first << "," << pair.second << std::endl;
+	}
+}
+
+void BitcoinExchange::printInput()
 {
 	if (std::isnan(_inputValue))
 		std::cout << _inputDate << " | " << "nan" << std::endl;
 	else
 		std::cout << _inputDate << " | " << _inputValue << std::endl;
+}
+bool isValidDate(std::string date)
+{	
+	int year, month, day;
+	char dash1, dash2;
+	
+	int daysInFebruary;
+	std::istringstream iss(date);
+	if (date.size() != 10 || date[4] != '-' || date[7] != '-')
+		return false;
+	if (!(iss >> year >> dash1 >> month >> dash2 >> day))
+		return false;
+	if (month < 1 || month > 12)
+		return false;
+	if (dash1 != '-' || dash2 != '-')
+		return false;
+	if (isLeapYear(year))
+		daysInFebruary = 29;
+	else
+		daysInFebruary = 28;
+	int maxDaysOfMonth[12] = {31, daysInFebruary, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	if (day < 1 || day > maxDaysOfMonth[month - 1])
+		return false;
+	return true;
+}
+
+bool isLeapYear(int year)
+{
+	if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) 
+		return true;
+	else
+		return false;
+}
+bool isUnsignedInt(std::string nbrStr)
+{
+	for (char c : nbrStr) 
+	{
+		if (!std::isdigit(c)) 
+			return false;
+	}
+	return true;
+}
+
+unsigned int convertToUnsignedInt(std::string nbr)
+{
+	unsigned int unsignedIntVal;
+	
+	try
+	{
+		unsignedIntVal = static_cast<unsigned int>(std::stoul(nbr));
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << "Exception caught: " << e.what() << std::endl;
+	}
+	if (!isInRange(unsignedIntVal))
+		std::cerr << "Error: conversion failed1" << std::endl;
+	return unsignedIntVal;
+}
+
+float convertToFloat(std::string nbrStr)
+{
+	float floatVal;
+	try
+	{
+		floatVal = std::stof(nbrStr);
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << "Exception caught: " << e.what() << std::endl;
+	}
+	if (!isInRange(floatVal))
+		std::cerr << "Error: conversion failed2" << std::endl;
+	return floatVal;
 }
