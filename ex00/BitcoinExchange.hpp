@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:46:49 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/04/28 20:44:51 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/04/28 22:01:01 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ public:
 
 	void calcTurnOver(const std::string& inputFile);
 };
-
-bool isValidDate(std::string date);
+void openFile(const std::string& dataFile, 	std::ifstream& file);
 bool isLeapYear(int year);
+bool isValidDate(std::string date);
 unsigned int convertToUnsignedInt(std::string nbr);
 float convertToFloat(std::string nbrStr);
 

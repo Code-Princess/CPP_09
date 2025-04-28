@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:46:59 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/04/28 20:47:40 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/04/28 22:36:00 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,6 @@ BitcoinExchange::~BitcoinExchange()
 void BitcoinExchange::calcTurnOver(const std::string& inputFile)
 {
 	readInputLineByLine(inputFile);
-}
-
-void openFile(const std::string& dataFile, 	std::ifstream& file)
-{
-	file.open(dataFile);
-	if (!file.is_open())
-		throw std::runtime_error("open file failed!");
 }
 
 void BitcoinExchange::parseData(const std::string& dataFile)
@@ -115,35 +108,45 @@ void BitcoinExchange::readInputLineByLine(const std::string& inputFile)
 
 void BitcoinExchange::parseInputLine(std::string nextLine)
 {
-	std::string		valStr;
+	std::string		date,value;
+	_inputDate = "";
+	_inputValue = NULL;
 	nextLine.erase(std::remove(nextLine.begin(), nextLine.end(), ' '), nextLine.end());
 	std::stringstream 	ss(nextLine);
 	
-	if (std::getline(ss, _inputDate, '|') && std::getline(ss, valStr))
+	if (std::getline(ss, date, '|') && std::getline(ss, value))
 	{
-		//TODO check valid date here
-		if (valStr.empty())
-		{
-			std::cerr << "Error: value is empty" << std::endl;
-		}
+		if (isValidDate(date))
+			_inputDate = date;
 		else
+			std::cerr << "Error: invalid date: " << date << std::endl;
+		
+		if (!value.empty())
 		{
-			if (isUnsignedInt(valStr))
-				_inputValue = convertToUnsignedInt(valStr);
+			if (isUnsignedInt(value))
+				_inputValue = convertToUnsignedInt(value);
 			else
 			{
-std::cout << valStr << "\n";
-				_inputValue = convertToFloat(valStr);
-std::cout << _inputValue << "\n";
+				_inputValue = convertToFloat(value);
 			}
-			// else
+			// try
 			// {
-			// 	std::cerr << "Error: invalid value" << std::endl;
-			// 	return false;	
+			// 	_inputValue = std::stod(value);
+			
+			// }
+			// catch(const std::exception& e)
+			// {
+			// 	std::cerr << "Exception caught: " << e.what() << std::endl;
 			// }
 		}
+		else
+			std::cerr << "Error: value is empty" << std::endl;
 	}
-printInput();
+	if (!_inputDate.empty() && _inputValue != NULL)
+	{
+		printInput();
+	}
+	
 }
 
 template <typename T>
@@ -179,6 +182,14 @@ void BitcoinExchange::printInput()
 	else
 		std::cout << _inputDate << " | " << _inputValue << std::endl;
 }
+
+void openFile(const std::string& dataFile, 	std::ifstream& file)
+{
+	file.open(dataFile);
+	if (!file.is_open())
+		throw std::runtime_error("open file failed!");
+}
+
 bool isValidDate(std::string date)
 {	
 	int year, month, day;
@@ -233,7 +244,7 @@ unsigned int convertToUnsignedInt(std::string nbr)
 	{
 		std::cerr << "Exception caught: " << e.what() << std::endl;
 	}
-	if (!isInRange(unsignedIntVal))
+	// if (!isInRange(unsignedIntVal))
 		std::cerr << "Error: conversion failed1" << std::endl;
 	return unsignedIntVal;
 }
@@ -249,7 +260,7 @@ float convertToFloat(std::string nbrStr)
 	{
 		std::cerr << "Exception caught: " << e.what() << std::endl;
 	}
-	if (!isInRange(floatVal))
+	// if (!isInRange(floatVal))
 		std::cerr << "Error: conversion failed2" << std::endl;
 	return floatVal;
 }
