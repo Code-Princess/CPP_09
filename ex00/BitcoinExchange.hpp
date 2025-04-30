@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:46:49 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/04/28 23:25:11 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/04/30 18:24:31 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,32 +22,25 @@ class BitcoinExchange
 private:
 	std::map<std::string, double>	_data;
 	std::string						_inputDate;
-	std::optional<float> 			_inputValue;
+	std::optional<double> 			_inputValue;
 
-		
-	void parseData(const std::string& dataFile);
-	void parseDataLine(const std::string& nextLine);
-	
-	void readInputLineByLine(const std::string& inputFile);
-	void parseInputLine(std::string nextLine);
+	void 	parseData(const std::string& dataFile);
+	void 	parseDataLine(const std::string& nextLine);
+	void 	parseInputLine(std::string nextLine);
+	double 	getBtcExchangeRate(std::string inputDate);
+	double	calcTurnOver(double exchangeRate, double inputValue);
 
-	
 	void printData();
 	void printInput();
+	void printResult(double turnOver);
 public:
 	BitcoinExchange();
 	BitcoinExchange(const std::string dataFile);
 	~BitcoinExchange();
-	
 	BitcoinExchange(const BitcoinExchange& other) = delete;
 	BitcoinExchange& operator=(const BitcoinExchange& other) = delete;
 
-	// std::string getInputDate();
-	// float getInputValue();
-	
-	// float getBitcoinExchangeRate(std::string date);
-
-	void calcTurnOver(const std::string& inputFile);
+	void executeTurnOver(const std::string& inputFile);
 };
 
 void openFile(const std::string& dataFile, 	std::ifstream& file);

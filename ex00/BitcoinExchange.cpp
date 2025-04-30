@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:46:59 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/04/28 23:42:02 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/04/30 18:24:06 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,38 @@ BitcoinExchange::~BitcoinExchange()
 {
 }
 
-void BitcoinExchange::calcTurnOver(const std::string& inputFile)
+void BitcoinExchange::executeTurnOver(const std::string& inputFile)
 {
-	readInputLineByLine(inputFile);
+	bool 				isFirstLine;
+	std::ifstream		file;
+	std::string 		nextLine;
+	double				exchangeRate, turnOver;
+	
+	isFirstLine = true;
+	openFile(inputFile, file);
+	while (std::getline(file, nextLine))
+	{
+		if (isFirstLine)
+		{
+			isFirstLine = false;
+			continue;
+		}
+		parseInputLine(nextLine);
+		if (!_inputDate.empty() && _inputValue.has_value())
+		{
+			try
+			{
+				exchangeRate = getBtcExchangeRate(_inputDate);
+			}
+			catch(const std::exception& e)
+			{
+				std::cerr << "Exception caught: " << e.what() << std::endl;
+			}
+			turnOver = calcTurnOver(exchangeRate, _inputValue.value());
+			printResult(turnOver);
+		}
+	}
+	file.close();
 }
 
 void BitcoinExchange::parseData(const std::string& dataFile)
@@ -84,26 +113,6 @@ void BitcoinExchange::parseDataLine(const std::string& nextLine)
 	}
 }
 
-void BitcoinExchange::readInputLineByLine(const std::string& inputFile)
-{
-	bool 				isFirstLine;
-	std::ifstream		file;
-	std::string 		nextLine;
-	
-	isFirstLine = true;
-	openFile(inputFile, file);
-	while (std::getline(file, nextLine))
-	{
-		if (isFirstLine)
-		{
-			isFirstLine = false;
-			continue;
-		}
-		parseInputLine(nextLine);
-	}
-	file.close();
-}
-
 void BitcoinExchange::parseInputLine(std::string nextLine)
 {
 	std::string		date,value;
@@ -131,10 +140,23 @@ void BitcoinExchange::parseInputLine(std::string nextLine)
 				return;
 		}
 	}
-	if (!_inputDate.empty() && _inputValue.has_value())
-		printInput();
 }
 
+double 	BitcoinExchange::getBtcExchangeRate(std::string inputDate)
+{
+	auto it = _data.lower_bound(inputDate);
+	if (it != _data.end() && it->first == inputDate)
+		return it->second;
+	if (it == _data.begin())
+		throw std::runtime_error("no available exchange rate!");
+	--it;
+	return it->second;
+}
+
+double 	BitcoinExchange::calcTurnOver(double exchangeRate, double inputValue)
+{
+	return exchangeRate * inputValue;
+}
 void BitcoinExchange::printData()
 {
 	std::cout << "_data map:" << std::endl;
@@ -148,6 +170,12 @@ void BitcoinExchange::printData()
 void BitcoinExchange::printInput()
 {
 	std::cout << _inputDate << " | " << _inputValue.value() << std::endl;
+}
+
+void BitcoinExchange::printResult(double turnOver)
+{
+	std::cout << _inputDate << " => " << _inputValue.value() << \
+		" = " << turnOver << std::endl;
 }
 
 void openFile(const std::string& dataFile, 	std::ifstream& file)

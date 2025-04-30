@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:47:37 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/04/28 20:34:49 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/04/30 17:23:46 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int main (int argc, char* argv[])
 	try
 	{
 		BitcoinExchange btc("data.csv");
-		btc.calcTurnOver(inputFile);
+		btc.executeTurnOver(inputFile);
 	}
 	catch(const std::exception& e)
 	{
