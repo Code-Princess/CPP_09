@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:46:59 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/04/30 18:24:06 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/04/30 19:08:22 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,20 +46,23 @@ void BitcoinExchange::executeTurnOver(const std::string& inputFile)
 			isFirstLine = false;
 			continue;
 		}
-		parseInputLine(nextLine);
-		if (!_inputDate.empty() && _inputValue.has_value())
+		if (parseInputLine(nextLine))
 		{
-			try
+			if (!_inputDate.empty() && _inputValue.has_value())
 			{
-				exchangeRate = getBtcExchangeRate(_inputDate);
+				try
+				{
+					exchangeRate = getBtcExchangeRate(_inputDate);
+				}
+				catch(const std::exception& e)
+				{
+					std::cerr << "Exception caught: " << e.what() << std::endl;
+				}
+				turnOver = calcTurnOver(exchangeRate, _inputValue.value());
+				printResult(turnOver);
 			}
-			catch(const std::exception& e)
-			{
-				std::cerr << "Exception caught: " << e.what() << std::endl;
-			}
-			turnOver = calcTurnOver(exchangeRate, _inputValue.value());
-			printResult(turnOver);
 		}
+
 	}
 	file.close();
 }
@@ -113,23 +116,27 @@ void BitcoinExchange::parseDataLine(const std::string& nextLine)
 	}
 }
 
-void BitcoinExchange::parseInputLine(std::string nextLine)
+bool BitcoinExchange::parseInputLine(std::string nextLine)
 {
 	std::string		date,value;
 	_inputDate = "";
 	_inputValue = std::nullopt;
 	nextLine.erase(std::remove(nextLine.begin(), nextLine.end(), ' '), nextLine.end());
 	std::stringstream 	ss(nextLine);
-	
 	if (std::getline(ss, date, '|') && std::getline(ss, value))
 	{
 		if (isValidDate(date))
 			_inputDate = date;
 		else
+		{
 			std::cerr << "Error: invalid date: " << date << std::endl;
-
+			return false;
+		}
 		if (value.empty())
+		{
 			std::cerr << "Error: empty value" << std::endl;
+			return false;
+		}
 		else
 		{
 			if (isUnsignedInt(value))
@@ -137,9 +144,15 @@ void BitcoinExchange::parseInputLine(std::string nextLine)
 			else
 				_inputValue = convertToFloat(value);
 			if (!isValidRange(_inputValue.value()))
-				return;
+				return false;
 		}
 	}
+	else
+	{
+		std::cerr << "Error: bad input => " << date << std::endl;
+		return false;
+	}
+	return true;
 }
 
 double 	BitcoinExchange::getBtcExchangeRate(std::string inputDate)
