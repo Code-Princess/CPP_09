@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:46:49 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/04/30 18:25:18 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/04/30 19:29:15 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,11 @@ private:
 	std::optional<double> 			_inputValue;
 
 	void 	parseData(const std::string& dataFile);
-	void 	parseDataLine(const std::string& nextLine);
-	bool 	parseInputLine(std::string nextLine);
-	double 	getBtcExchangeRate(std::string inputDate);
+	void 	parseDataLine(std::string& nextLine);
+	void	processInputLine(std::string& nextLine);
+	bool 	parseInputLine(std::string& nextLine);
+	bool	processValue(std::string& value);
+	double 	getBtcExchangeRate(std::string& inputDate);
 	double	calcTurnOver(double exchangeRate, double inputValue);
 
 	void printData();

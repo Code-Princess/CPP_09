@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:46:59 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/04/30 19:08:22 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/04/30 19:31:50 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void BitcoinExchange::executeTurnOver(const std::string& inputFile)
 	bool 				isFirstLine;
 	std::ifstream		file;
 	std::string 		nextLine;
-	double				exchangeRate, turnOver;
 	
 	isFirstLine = true;
 	openFile(inputFile, file);
@@ -46,25 +45,31 @@ void BitcoinExchange::executeTurnOver(const std::string& inputFile)
 			isFirstLine = false;
 			continue;
 		}
-		if (parseInputLine(nextLine))
-		{
-			if (!_inputDate.empty() && _inputValue.has_value())
-			{
-				try
-				{
-					exchangeRate = getBtcExchangeRate(_inputDate);
-				}
-				catch(const std::exception& e)
-				{
-					std::cerr << "Exception caught: " << e.what() << std::endl;
-				}
-				turnOver = calcTurnOver(exchangeRate, _inputValue.value());
-				printResult(turnOver);
-			}
-		}
-
+		processInputLine(nextLine);
 	}
 	file.close();
+}
+
+void BitcoinExchange::processInputLine(std::string& nextLine)
+{
+	double exchangeRate, turnOver;
+
+	if (parseInputLine(nextLine))
+	{
+		if (!_inputDate.empty() && _inputValue.has_value())
+		{
+			try
+			{
+				exchangeRate = getBtcExchangeRate(_inputDate);
+			}
+			catch(const std::exception& e)
+			{
+				std::cerr << "Exception caught: " << e.what() << std::endl;
+			}
+			turnOver = calcTurnOver(exchangeRate, _inputValue.value());
+			printResult(turnOver);
+		}
+	}
 }
 
 void BitcoinExchange::parseData(const std::string& dataFile)
@@ -88,7 +93,7 @@ void BitcoinExchange::parseData(const std::string& dataFile)
 	file.close();
 }
 
-void BitcoinExchange::parseDataLine(const std::string& nextLine)
+void BitcoinExchange::parseDataLine(std::string& nextLine)
 {
 	std::string			date;
 	std::string			exchangeRateStr;
@@ -116,7 +121,7 @@ void BitcoinExchange::parseDataLine(const std::string& nextLine)
 	}
 }
 
-bool BitcoinExchange::parseInputLine(std::string nextLine)
+bool BitcoinExchange::parseInputLine(std::string& nextLine)
 {
 	std::string		date,value;
 	_inputDate = "";
@@ -132,20 +137,8 @@ bool BitcoinExchange::parseInputLine(std::string nextLine)
 			std::cerr << "Error: invalid date: " << date << std::endl;
 			return false;
 		}
-		if (value.empty())
-		{
-			std::cerr << "Error: empty value" << std::endl;
+		if (!processValue(value))
 			return false;
-		}
-		else
-		{
-			if (isUnsignedInt(value))
-				_inputValue = convertToUnsignedInt(value);
-			else
-				_inputValue = convertToFloat(value);
-			if (!isValidRange(_inputValue.value()))
-				return false;
-		}
 	}
 	else
 	{
@@ -155,7 +148,26 @@ bool BitcoinExchange::parseInputLine(std::string nextLine)
 	return true;
 }
 
-double 	BitcoinExchange::getBtcExchangeRate(std::string inputDate)
+bool BitcoinExchange::processValue(std::string& value)
+{
+	if (value.empty())
+	{
+		std::cerr << "Error: empty value" << std::endl;
+		return false;
+	}
+	else
+	{
+		if (isUnsignedInt(value))
+			_inputValue = convertToUnsignedInt(value);
+		else
+			_inputValue = convertToFloat(value);
+		if (!isValidRange(_inputValue.value()))
+			return false;
+	}
+	return true;
+}
+
+double 	BitcoinExchange::getBtcExchangeRate(std::string& inputDate)
 {
 	auto it = _data.lower_bound(inputDate);
 	if (it != _data.end() && it->first == inputDate)
