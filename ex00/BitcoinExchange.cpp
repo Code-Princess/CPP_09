@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:46:59 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/05/02 21:17:42 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/05/03 00:29:40 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ void BitcoinExchange::executeTurnOver(const std::string& inputFile)
 
 void BitcoinExchange::processInputLine(std::string& nextLine)
 {
-	double exchangeRate, turnOver;
+	std::optional<double> exchangeRate;
+	double turnOver;
 
 	if (parseInputLine(nextLine))
 	{
@@ -61,8 +62,11 @@ void BitcoinExchange::processInputLine(std::string& nextLine)
 			try
 			{
 				exchangeRate = getBtcExchangeRate(_inputDate);
-				turnOver = calcTurnOver(exchangeRate, _inputValue.value());
-				printResult(turnOver);
+				if (exchangeRate != std::nullopt)
+				{
+					turnOver = calcTurnOver(exchangeRate, _inputValue.value());
+					printResult(turnOver);
+				}
 			}
 			catch(const std::exception& e)
 			{
@@ -177,31 +181,39 @@ bool BitcoinExchange::processValue(std::string& value)
 				_inputValue = convertToUnsignedInt(value);
 			else
 				_inputValue = convertToDouble(value);
+			if (_inputValue == std::nullopt)
+			{
+				std::cerr << "Error: invalid value " << value << std::endl;
+				return false;
+			}
+			if (!isValidRange(_inputValue.value()))
+				return false;
 		}
 		catch(const std::exception& e)
 		{
 			std::cerr << "Error: " << e.what() << std::endl;
 		}
-		if (!isValidRange(_inputValue.value()))
-			return false;
 	}
 	return true;
 }
 
-double 	BitcoinExchange::getBtcExchangeRate(std::string& inputDate)
+std::optional<double> BitcoinExchange::getBtcExchangeRate(std::string& inputDate)
 {
 	auto it = _data.lower_bound(inputDate);
 	if (it != _data.end() && it->first == inputDate)
 		return it->second;
 	if (it == _data.begin())
-		throw std::runtime_error("no available exchange rate!");
+	{
+		std::cerr << "Error: no available exchange rate!" << std::endl;
+		return std::nullopt;
+	}
 	--it;
 	return it->second;
 }
 
-double 	BitcoinExchange::calcTurnOver(double exchangeRate, double inputValue)
+double 	BitcoinExchange::calcTurnOver(std::optional<double> exchangeRate, double inputValue)
 {
-	return exchangeRate * inputValue;
+	return exchangeRate.value() * inputValue;
 }
 void BitcoinExchange::printData()
 {
@@ -273,17 +285,15 @@ bool isUnsignedInt(std::string nbrStr)
 	return true;
 }
 
-unsigned int convertToUnsignedInt(std::string nbr)
+std::optional<unsigned int> convertToUnsignedInt(std::string nbr)
 {
-	unsigned int unsignedIntVal;
+	std::optional<unsigned int> unsignedIntVal;
 	try
 	{
 		size_t idx;
 		unsignedIntVal = static_cast<unsigned int>(std::stoul(nbr, &idx));
 		if (idx != nbr.size())
-		{
-			throw std::runtime_error("Error: invalid value " + nbr);
-		}
+			unsignedIntVal = std::nullopt;
 	}
 	catch(const std::exception& e)
 	{
@@ -292,21 +302,18 @@ unsigned int convertToUnsignedInt(std::string nbr)
 	return unsignedIntVal;
 }
 
-double convertToDouble(std::string nbrStr)
+std::optional<double> convertToDouble(std::string nbrStr)
 {
-	double doubleVal;
+	std::optional<double> doubleVal;
 	try
 	{
 		size_t idx;
 		doubleVal = std::stod(nbrStr, &idx);
 		if (idx != nbrStr.size())
-		{
-			throw std::runtime_error("Error: invalid value " + nbrStr);
-		}
+			doubleVal = std::nullopt;
 	}
 	catch(const std::exception& e)
 	{
-		std::cerr << e.what() << std::endl;
 	}
 	return doubleVal;
 }

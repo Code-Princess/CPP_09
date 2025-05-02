@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:46:49 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/05/02 20:19:31 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/05/03 00:03:31 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ private:
 	std::string						_inputDate;
 	std::optional<double> 			_inputValue;
 
-	void 	parseData(const std::string& dataFile);
-	void 	parseDataLine(std::string& nextLine);
-	void	processInputLine(std::string& nextLine);
-	bool 	parseInputLine(std::string& nextLine);
-	bool	processValue(std::string& value);
-	double 	getBtcExchangeRate(std::string& inputDate);
-	double	calcTurnOver(double exchangeRate, double inputValue);
+	void 					parseData(const std::string& dataFile);
+	void 					parseDataLine(std::string& nextLine);
+	void					processInputLine(std::string& nextLine);
+	bool 					parseInputLine(std::string& nextLine);
+	bool					processValue(std::string& value);
+	std::optional<double>	getBtcExchangeRate(std::string& inputDate);
+	double					calcTurnOver(std::optional<double> exchangeRate, double inputValue);
 
 	void printData();
 	void printInput();
@@ -51,7 +51,7 @@ bool isValidDate(std::string date);
 template <typename T>
 bool isValidRange(T value);
 bool isUnsignedInt(std::string nbrStr);
-unsigned int convertToUnsignedInt(std::string nbr);
-double convertToDouble(std::string nbrStr);
+std::optional<unsigned int> convertToUnsignedInt(std::string nbr);
+std::optional<double> convertToDouble(std::string nbrStr);
 
 #endif
