@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:46:59 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/05/02 19:52:26 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/05/02 21:17:42 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,13 @@ void BitcoinExchange::processInputLine(std::string& nextLine)
 			try
 			{
 				exchangeRate = getBtcExchangeRate(_inputDate);
+				turnOver = calcTurnOver(exchangeRate, _inputValue.value());
+				printResult(turnOver);
 			}
 			catch(const std::exception& e)
 			{
-				std::cerr << "Exception caught: " << e.what() << std::endl;
+				std::cerr << "Error: " << e.what() << std::endl;
 			}
-			turnOver = calcTurnOver(exchangeRate, _inputValue.value());
-			printResult(turnOver);
 		}
 	}
 }
@@ -121,7 +121,7 @@ void BitcoinExchange::parseDataLine(std::string& nextLine)
 		}
 		catch(const std::exception& e)
 		{
-			std::cerr << "Exception caught: " << e.what() << std::endl;
+			std::cerr << "Error: " << e.what() << std::endl;
 		}
 	}
 	else
@@ -134,6 +134,7 @@ bool BitcoinExchange::parseInputLine(std::string& nextLine)
 	_inputDate = "";
 	_inputValue = std::nullopt;
 	std::stringstream 	ss(nextLine);
+
 	if (std::getline(ss, date, '|') && std::getline(ss, value))
 	{
 		if (date[date.size() - 1] != ' ' || value[0] != ' ')
@@ -170,10 +171,17 @@ bool BitcoinExchange::processValue(std::string& value)
 	}
 	else
 	{
-		if (isUnsignedInt(value))
-			_inputValue = convertToUnsignedInt(value);
-		else
-			_inputValue = convertToFloat(value);
+		try
+		{
+			if (isUnsignedInt(value))
+				_inputValue = convertToUnsignedInt(value);
+			else
+				_inputValue = convertToDouble(value);
+		}
+		catch(const std::exception& e)
+		{
+			std::cerr << "Error: " << e.what() << std::endl;
+		}
 		if (!isValidRange(_inputValue.value()))
 			return false;
 	}
@@ -270,27 +278,37 @@ unsigned int convertToUnsignedInt(std::string nbr)
 	unsigned int unsignedIntVal;
 	try
 	{
-		unsignedIntVal = static_cast<unsigned int>(std::stoul(nbr));
+		size_t idx;
+		unsignedIntVal = static_cast<unsigned int>(std::stoul(nbr, &idx));
+		if (idx != nbr.size())
+		{
+			throw std::runtime_error("Error: invalid value " + nbr);
+		}
 	}
 	catch(const std::exception& e)
 	{
-		std::cerr << "Exception caught: " << e.what() << std::endl;
+		std::cerr << "Error: " << e.what() << std::endl;
 	}
 	return unsignedIntVal;
 }
 
-float convertToFloat(std::string nbrStr)
+double convertToDouble(std::string nbrStr)
 {
-	float floatVal;
+	double doubleVal;
 	try
 	{
-		floatVal = std::stof(nbrStr);
+		size_t idx;
+		doubleVal = std::stod(nbrStr, &idx);
+		if (idx != nbrStr.size())
+		{
+			throw std::runtime_error("Error: invalid value " + nbrStr);
+		}
 	}
 	catch(const std::exception& e)
 	{
-		std::cerr << "Exception caught: " << e.what() << std::endl;
+		std::cerr << e.what() << std::endl;
 	}
-	return floatVal;
+	return doubleVal;
 }
 
 template <typename T>

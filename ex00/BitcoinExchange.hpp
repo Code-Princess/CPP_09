@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:46:49 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/04/30 19:29:15 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/05/02 20:19:31 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,6 @@ template <typename T>
 bool isValidRange(T value);
 bool isUnsignedInt(std::string nbrStr);
 unsigned int convertToUnsignedInt(std::string nbr);
-float convertToFloat(std::string nbrStr);
+double convertToDouble(std::string nbrStr);
 
 #endif

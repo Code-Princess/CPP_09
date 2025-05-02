@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:47:37 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/05/02 19:43:03 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/05/02 21:13:41 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int main (int argc, char* argv[])
 		}
 		catch(const std::exception& e)
 		{
-			std::cerr << "Exception caught: " << e.what() << std::endl;
+			std::cerr << "Error: " << e.what() << std::endl;
 		}
 	}
 	return 0;
