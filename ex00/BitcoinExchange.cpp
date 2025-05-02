@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:46:59 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/04/30 19:31:50 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/05/02 19:52:26 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,13 @@ void BitcoinExchange::parseDataLine(std::string& nextLine)
 	{
 		try
 		{
-			exchangeRate = std::stod(exchangeRateStr);
+			size_t idx;
+			exchangeRate = std::stod(exchangeRateStr, &idx);
+			if (idx != exchangeRateStr.size())
+			{
+				std::cerr << "Error: invalid exchange_rate " << exchangeRateStr << std::endl;
+				return;
+			}
 			if (isValidDate(date))
 			{
 				if(!(_data.insert({date, exchangeRate})).second)
@@ -111,14 +117,15 @@ void BitcoinExchange::parseDataLine(std::string& nextLine)
 					"," << exchangeRate << std::endl;
 			}
 			else
-				std::cerr << "invalid date: " << date << std::endl;
-			
+				std::cerr << "Error: invalid date " << date << std::endl;
 		}
 		catch(const std::exception& e)
 		{
 			std::cerr << "Exception caught: " << e.what() << std::endl;
 		}
 	}
+	else
+		std::cerr << "Error: invalid format " << nextLine << std::endl;
 }
 
 bool BitcoinExchange::parseInputLine(std::string& nextLine)
@@ -126,10 +133,16 @@ bool BitcoinExchange::parseInputLine(std::string& nextLine)
 	std::string		date,value;
 	_inputDate = "";
 	_inputValue = std::nullopt;
-	nextLine.erase(std::remove(nextLine.begin(), nextLine.end(), ' '), nextLine.end());
 	std::stringstream 	ss(nextLine);
 	if (std::getline(ss, date, '|') && std::getline(ss, value))
 	{
+		if (date[date.size() - 1] != ' ' || value[0] != ' ')
+		{
+			std::cerr << "Error: invalid format " << nextLine << std::endl;
+			return false;
+		}
+		date.erase(date.size() - 1, 1);
+		value.erase(0, 1);
 		if (isValidDate(date))
 			_inputDate = date;
 		else
@@ -142,7 +155,7 @@ bool BitcoinExchange::parseInputLine(std::string& nextLine)
 	}
 	else
 	{
-		std::cerr << "Error: bad input => " << date << std::endl;
+		std::cerr << "Error: invalid format => " << nextLine << std::endl;
 		return false;
 	}
 	return true;
