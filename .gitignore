@@ -2,8 +2,6 @@
 *.o
 main
 btc
-input*.txt
-data*.csv
 outfile
 infile
 .DS_Store
