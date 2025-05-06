@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 22:34:44 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/05/04 21:31:56 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/05/06 18:17:33 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,14 @@
 class PmergeMe {
 private:
 	std::vector<unsigned int> _inputNbrs;
+	std::vector<unsigned int> _nbrs;
 	std::vector<unsigned int> _jacobsthalNbrs;
 
 	void createJacobsthalNbrs();
+	void recursivePairCompSwap(int level);
+	std::vector<unsigned int> trimToEvenCount(int level);
+	std::vector<unsigned int> pairCompSwap(std::vector<unsigned int> vec, int level);
+	void concatVecs(std::vector<unsigned int> vec1, std::vector<unsigned int> vec2);
 	
 public:
 	PmergeMe() = delete;
@@ -35,10 +40,7 @@ public:
 	
 };
 void printVec(std::string vecName, std::vector<unsigned int> vec);
-std::vector<unsigned int> trimToEvenCount(std::vector<unsigned int> vec);
-std::vector<unsigned int> pairCompSwap(std::vector<unsigned int> vec);
-std::vector<unsigned int> concatVecs(std::vector<unsigned int> vec1, \
-	std::vector<unsigned int> vec2);
 
+int calcStartIdxForSwap(int level);
 
 #endif

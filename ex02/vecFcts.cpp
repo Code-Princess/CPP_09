@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <iostream>
+#include <cmath>
 
 #include "PmergeMe.hpp"
 
@@ -23,28 +24,62 @@ void printVec(std::string vecName, std::vector<unsigned int> vec)
 	std::cout << vecName;
 	std::cout << std::endl;
 }
-std::vector<unsigned int> trimToEvenCount(std::vector<unsigned int> vec)
+std::vector<unsigned int> PmergeMe::trimToEvenCount(int level)
 {
-	size_t remainder;
-	remainder = vec.size() % 2;
-	std::vector<unsigned int> trimmedVec(vec.begin(), vec.end() - remainder);
+	// size_t remainder;
+	// remainder = vec.size() % 2;
+	int modulus = static_cast<int>(std::pow(2, level + 1));
+	float remainder;
+	remainder = _nbrs.size() % modulus;
+	std::vector<unsigned int> trimmedVec(_nbrs.begin(), _nbrs.end() - remainder);
 	return trimmedVec;
 }
-std::vector<unsigned int> pairCompSwap(std::vector<unsigned int> vec)
+
+int calcStartIdxForSwap(int level)
 {
-	for (size_t i = 0; i < vec.size(); i += 2)
+	int idx = 0;
+	for (int i = 0; i < level; i++)
 	{
-		if (vec[i] > vec[i + 1])
-			std::swap(vec[i], vec[i + 1]);
+		idx += static_cast<int>(std::pow(2, i));
 	}
+	return idx;
+}
+std::vector<unsigned int> PmergeMe::pairCompSwap(std::vector<unsigned int> vec, int level)
+{
+	// for (size_t i = 0; i < vec.size(); i += 2)
+	// {
+	// 	if (vec[i] > vec[i + 1])
+	// 		std::swap(vec[i], vec[i + 1]);
+	// }
+	// return vec;
+	// level = 2;
+	int stepWidth = static_cast<int>(std::pow(2, level));
+// std::cout << "level: " << level << std::endl;
+	int	idxSwap = calcStartIdxForSwap(level);
+// std::cout << "idxSwap: " << idxSwap << "\n";
+	for (size_t i = idxSwap; i + 2 * stepWidth <= vec.size(); i += (2 * stepWidth))
+	{
+		// if (vec[i] > vec[i + 1])
+		// std::swap(vec[i], vec[i + 1]);
+std::cout << vec[i] << vec[i + stepWidth] << "---\n";
+		if (vec[i] > vec[i + stepWidth])
+		{
+			// std::swap_ranges(vec.begin() + i - idxSwap, vec.begin() + i + stepWidth, vec.begin() + i + stepWidth);
+			// std::cout << *(vec.begin() + i + 1 - stepWidth) <<  *(vec.begin() + i) << *(vec.begin() + i + 1) << "\n\n";
+			std::cout << *(vec.begin() + i - (stepWidth - 1)) <<  *(vec.begin() + i + 1) << *(vec.begin() + i + 1) << "\n\n";
+			std::swap_ranges(vec.begin() + i - (stepWidth - 1), vec.begin() + i + 1, vec.begin() + i + 1);
+
+		}
+	}
+	printVec("---vec", vec);
 	return vec;
 }
-std::vector<unsigned int> concatVecs(std::vector<unsigned int> vec1, \
+void PmergeMe::concatVecs(std::vector<unsigned int> vec1, \
 	std::vector<unsigned int> vec2)
 {
-	std::vector<unsigned int> resultVec = vec1;
-	resultVec.insert(resultVec.end(), vec2.begin(), vec2.end());
-	return resultVec;
+	// std::vector<unsigned int> resultVec = vec1;
+	// resultVec.insert(resultVec.end(), vec2.begin(), vec2.end());
+	_nbrs = vec1;
+	_nbrs.insert(_nbrs.end(), vec2.begin(), vec2.end());
 }
-
 
