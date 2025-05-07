@@ -44,12 +44,12 @@ int calcStartIdxForSwap(int level)
 }
 std::vector<unsigned int> PmergeMe::pairCompSwap(std::vector<unsigned int> vec, int level)
 {
-std::cout << "level: " << level << std::endl;
+// std::cout << "level: " << level << std::endl;
 	int stepWidth = static_cast<int>(std::pow(2, level));
-std::cout << "stepWidth: " << stepWidth << std::endl;
+// std::cout << "stepWidth: " << stepWidth << std::endl;
 	int	idxSwap = calcStartIdxForSwap(level);
-std::cout << "idxSwap: " << idxSwap << "\n";
-std::cout << "vec.size trimmed: " << vec.size() << std::endl;
+// std::cout << "idxSwap: " << idxSwap << "\n";
+// std::cout << "vec.size trimmed: " << vec.size() << std::endl;
 	for (size_t i = idxSwap; i + stepWidth <= vec.size(); i += (2 * stepWidth))
 	{
 // std::cout << "vec[" << i << "] = " << vec[i] << " and vec[" << i << "+" << stepWidth << "] = " << vec[i + stepWidth] << "---\n";
