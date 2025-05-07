@@ -24,6 +24,7 @@ void printVec(std::string vecName, std::vector<unsigned int> vec)
 	std::cout << vecName;
 	std::cout << std::endl;
 }
+
 std::vector<unsigned int> PmergeMe::trimToEvenCount(int level)
 {
 	int modulus = static_cast<int>(std::pow(2, level + 1));
@@ -69,3 +70,10 @@ void PmergeMe::concatVecs(std::vector<unsigned int> vec1, \
 	_nbrs.insert(_nbrs.end(), vec2.begin(), vec2.end());
 }
 
+std::vector<unsigned int> PmergeMe::concatVecs2(std::vector<unsigned int> vec1, \
+	std::vector<unsigned int> vec2)
+{
+	std::vector<unsigned int> concVec = vec1;
+	concVec.insert(concVec.end(), vec2.begin(), vec2.end());
+	return concVec;
+}

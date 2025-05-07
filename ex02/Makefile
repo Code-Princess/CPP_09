@@ -6,7 +6,7 @@
 #    By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/12 12:44:18 by llacsivy          #+#    #+#              #
-#    Updated: 2025/05/06 18:08:46 by llacsivy         ###   ########.fr        #
+#    Updated: 2025/05/07 22:26:58 by llacsivy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,8 @@ CPPFLAGS		:= -Wextra -Wall -Werror -Wshadow -std=c++17
 
 SRCS			:= 	main.cpp \
 					PmergeMe.cpp \
-					vecFcts.cpp
+					vecFcts.cpp \
+					utils.cpp
 
 OBJS			:=	${SRCS:.cpp=.o}
 

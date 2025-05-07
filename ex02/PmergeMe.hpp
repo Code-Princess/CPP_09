@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 22:34:44 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/05/07 21:18:49 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/05/07 22:29:45 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ private:
 	std::vector<unsigned int> trimToEvenCount(int level);
 	std::vector<unsigned int> pairCompSwap(std::vector<unsigned int> vec, int level);
 	void concatVecs(std::vector<unsigned int> vec1, std::vector<unsigned int> vec2);
+	std::vector<unsigned int> concatVecs2(std::vector<unsigned int> vec1, \
+		std::vector<unsigned int> vec2);
 	void binInsertMainChain(int level);
 
 	
@@ -45,7 +47,6 @@ public:
 	
 };
 void printVec(std::string vecName, std::vector<unsigned int> vec);
-
 int calcStartIdxForSwap(int level);
 
 #endif

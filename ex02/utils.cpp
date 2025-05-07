@@ -1,26 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/12 12:47:37 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/05/07 23:10:19 by llacsivy         ###   ########.fr       */
+/*   Created: 2025/05/07 22:39:51 by llacsivy          #+#    #+#             */
+/*   Updated: 2025/05/07 23:08:07 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "PmergeMe.hpp"
 #include <iostream>
 
-#include "PmergeMe.hpp"
-
-int main (int argc, char* argv[])
+void PmergeMe::createJacobsthalNbrs()
 {
-	(void)argc;
-	(void)argv;
-	std::vector<unsigned int> input = {3, 5, 0, 9, 7, 1, 3, 7, 8, 2, 8};
-	PmergeMe mergeMe(input);
-	printVec("---Before", mergeMe.getNbrs());
-	mergeMe.sort();
-	return 0;
+	unsigned int nextNbr = 0;
+	size_t i = 2;
+	_jacobsthalNbrs.push_back(0);
+	_jacobsthalNbrs.push_back(1);
+	while (true)
+	{
+		nextNbr = _jacobsthalNbrs[i - 2] * 2 + _jacobsthalNbrs[i - 1];
+		if (nextNbr > _inputNbrs.size())
+			break;
+		_jacobsthalNbrs.push_back(nextNbr);
+		i++;
+	}
+	printVec("_jacobsthalNbrs", _jacobsthalNbrs);
 }
+
