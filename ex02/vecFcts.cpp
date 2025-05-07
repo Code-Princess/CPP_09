@@ -26,8 +26,6 @@ void printVec(std::string vecName, std::vector<unsigned int> vec)
 }
 std::vector<unsigned int> PmergeMe::trimToEvenCount(int level)
 {
-	// size_t remainder;
-	// remainder = vec.size() % 2;
 	int modulus = static_cast<int>(std::pow(2, level + 1));
 	float remainder;
 	remainder = _nbrs.size() % modulus;
@@ -46,12 +44,12 @@ int calcStartIdxForSwap(int level)
 }
 std::vector<unsigned int> PmergeMe::pairCompSwap(std::vector<unsigned int> vec, int level)
 {
-// std::cout << "level: " << level << std::endl;
+std::cout << "level: " << level << std::endl;
 	int stepWidth = static_cast<int>(std::pow(2, level));
-// std::cout << "stepWidth: " << stepWidth << std::endl;
+std::cout << "stepWidth: " << stepWidth << std::endl;
 	int	idxSwap = calcStartIdxForSwap(level);
-// std::cout << "idxSwap: " << idxSwap << "\n";
-// std::cout << "vec.size trimmed: " << vec.size() << std::endl;
+std::cout << "idxSwap: " << idxSwap << "\n";
+std::cout << "vec.size trimmed: " << vec.size() << std::endl;
 	for (size_t i = idxSwap; i + stepWidth <= vec.size(); i += (2 * stepWidth))
 	{
 // std::cout << "vec[" << i << "] = " << vec[i] << " and vec[" << i << "+" << stepWidth << "] = " << vec[i + stepWidth] << "---\n";
@@ -67,8 +65,6 @@ std::vector<unsigned int> PmergeMe::pairCompSwap(std::vector<unsigned int> vec, 
 void PmergeMe::concatVecs(std::vector<unsigned int> vec1, \
 	std::vector<unsigned int> vec2)
 {
-	// std::vector<unsigned int> resultVec = vec1;
-	// resultVec.insert(resultVec.end(), vec2.begin(), vec2.end());
 	_nbrs = vec1;
 	_nbrs.insert(_nbrs.end(), vec2.begin(), vec2.end());
 }
