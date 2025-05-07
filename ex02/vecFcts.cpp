@@ -46,32 +46,22 @@ int calcStartIdxForSwap(int level)
 }
 std::vector<unsigned int> PmergeMe::pairCompSwap(std::vector<unsigned int> vec, int level)
 {
-	// for (size_t i = 0; i < vec.size(); i += 2)
-	// {
-	// 	if (vec[i] > vec[i + 1])
-	// 		std::swap(vec[i], vec[i + 1]);
-	// }
-	// return vec;
-	// level = 2;
-	int stepWidth = static_cast<int>(std::pow(2, level));
 // std::cout << "level: " << level << std::endl;
+	int stepWidth = static_cast<int>(std::pow(2, level));
+// std::cout << "stepWidth: " << stepWidth << std::endl;
 	int	idxSwap = calcStartIdxForSwap(level);
 // std::cout << "idxSwap: " << idxSwap << "\n";
-	for (size_t i = idxSwap; i + 2 * stepWidth <= vec.size(); i += (2 * stepWidth))
+// std::cout << "vec.size trimmed: " << vec.size() << std::endl;
+	for (size_t i = idxSwap; i + stepWidth <= vec.size(); i += (2 * stepWidth))
 	{
-		// if (vec[i] > vec[i + 1])
-		// std::swap(vec[i], vec[i + 1]);
-std::cout << vec[i] << vec[i + stepWidth] << "---\n";
+// std::cout << "vec[" << i << "] = " << vec[i] << " and vec[" << i << "+" << stepWidth << "] = " << vec[i + stepWidth] << "---\n";
 		if (vec[i] > vec[i + stepWidth])
 		{
-			// std::swap_ranges(vec.begin() + i - idxSwap, vec.begin() + i + stepWidth, vec.begin() + i + stepWidth);
-			// std::cout << *(vec.begin() + i + 1 - stepWidth) <<  *(vec.begin() + i) << *(vec.begin() + i + 1) << "\n\n";
-			std::cout << *(vec.begin() + i - (stepWidth - 1)) <<  *(vec.begin() + i + 1) << *(vec.begin() + i + 1) << "\n\n";
+			// std::cout << *(vec.begin() + i - (stepWidth - 1)) <<  *(vec.begin() + i + 1) << *(vec.begin() + i + 1) << "\n\n";
 			std::swap_ranges(vec.begin() + i - (stepWidth - 1), vec.begin() + i + 1, vec.begin() + i + 1);
 
 		}
 	}
-	printVec("---vec", vec);
 	return vec;
 }
 void PmergeMe::concatVecs(std::vector<unsigned int> vec1, \

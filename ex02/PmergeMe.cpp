@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 22:35:33 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/05/06 18:57:43 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/05/07 19:12:08 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ void PmergeMe::sort()
 {
 	_nbrs = _inputNbrs;
 // printVec("---_nbrs", _nbrs);
-// 	std::vector<unsigned int> trimmedNbrs = trimToEvenCount(_nbrs);
-// printVec("---trimmedNbrs", trimmedNbrs);
-// 	std::vector<unsigned int> remainingNbrs(_nbrs.begin() + trimmedNbrs.size(), _nbrs.end());
-// printVec("---remainingNbrs", remainingNbrs);
-// 	std::vector<unsigned int> pairwiseSorted = pairCompSwap(trimmedNbrs);
+// 	std::vector<unsigned int> trimNbrs = trimToEvenCount(_nbrs);
+// printVec("---trimNbrs", trimNbrs);
+// 	std::vector<unsigned int> remainNbrs(_nbrs.begin() + trimNbrs.size(), _nbrs.end());
+// printVec("---remainNbrs", remainNbrs);
+// 	std::vector<unsigned int> pairwiseSorted = pairCompSwap(trimNbrs);
 // printVec("---pairwiseSorted", pairwiseSorted);
-// 	_nbrs = concatVecs(pairwiseSorted, remainingNbrs);
+// 	_nbrs = concatVecs(pairwiseSorted, remainNbrs);
 // printVec("---_nbrs", _nbrs);
 int level = 0;
 recursivePairCompSwap(level);
@@ -54,13 +54,13 @@ void PmergeMe::recursivePairCompSwap(int level)
 	if (_inputNbrs.size()/std::pow(2, level + 1) >= 2)
 	{
 		// printVec("---_nbrs", _nbrs);
-			std::vector<unsigned int> trimmedNbrs = trimToEvenCount(level);
-		printVec("----trimmedNbrs", trimmedNbrs);
-			std::vector<unsigned int> remainingNbrs(_nbrs.begin() + trimmedNbrs.size(), _nbrs.end());
-		printVec("----------------------remainingNbrs", remainingNbrs);
-			std::vector<unsigned int> pairwiseSorted = pairCompSwap(trimmedNbrs, level);
+			std::vector<unsigned int> trimNbrs = trimToEvenCount(level);
+		printVec("----trimNbrs", trimNbrs);
+			std::vector<unsigned int> remainNbrs(_nbrs.begin() + trimNbrs.size(), _nbrs.end());
+		printVec("----------------------remainNbrs", remainNbrs);
+			std::vector<unsigned int> pairwiseSorted = pairCompSwap(trimNbrs, level);
 		printVec("---pairwiseSorted", pairwiseSorted);
-			concatVecs(pairwiseSorted, remainingNbrs);
+			concatVecs(pairwiseSorted, remainNbrs);
 		printVec("---_nbrs", _nbrs);
 		recursivePairCompSwap(++level);
 	}
