@@ -23,6 +23,8 @@ private:
 	std::vector<unsigned int> _mainChain;
 	std::vector<unsigned int> _a;
 	std::vector<unsigned int> _b;
+	std::vector<unsigned int> _remain;
+
 
 	void createJacobsthalNbrs();
 	void recursivePairCompSwap(int level);

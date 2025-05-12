@@ -15,18 +15,20 @@
 
 void PmergeMe::createJacobsthalNbrs()
 {
-	unsigned int nextNbr = 0;
+	size_t nextNbr = 0;
 	size_t i = 2;
 	_jacobsthalNbrs.push_back(0);
 	_jacobsthalNbrs.push_back(1);
 	while (true)
 	{
 		nextNbr = _jacobsthalNbrs[i - 2] * 2 + _jacobsthalNbrs[i - 1];
-		if (nextNbr > _inputNbrs.size())
-			break;
-		_jacobsthalNbrs.push_back(nextNbr);
-		i++;
-	}
+
+			if (nextNbr > _inputNbrs.size())
+				break;
+			_jacobsthalNbrs.push_back(nextNbr);
+			i++;
+		}
 	printVec("_jacobsthalNbrs", _jacobsthalNbrs);
 }
+
 

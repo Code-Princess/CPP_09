@@ -20,6 +20,7 @@ PmergeMe::PmergeMe(std::vector<unsigned int> inputNbrs)
 {
 	
 }
+
 PmergeMe::~PmergeMe()
 {
 	
@@ -32,10 +33,9 @@ std::vector<unsigned int> PmergeMe::getNbrs()
 
 void PmergeMe::sort()
 {
-	// _nbrs = _inputNbrs;
-	// int level = 0;
-	// recursivePairCompSwap(level);
-
+	_nbrs = _inputNbrs;
+	int level = 0;
+	recursivePairCompSwap(level);
 	createJacobsthalNbrs();
 
 }
@@ -60,22 +60,55 @@ void PmergeMe::recursivePairCompSwap(int level)
 
 void PmergeMe::binInsertMainChain(int level)
 {
-std::cout << std::endl << std::endl << "level: " << level << std::endl;
-
-	std::vector<unsigned int> trimNbrs = trimToEvenCount(level);
+	std::cout << std::endl << std::endl << "level: " << level << std::endl;
+	int remainder = _nbrs.size() % 2;
+	std::vector<unsigned int> trimNbrs(_nbrs.begin(), _nbrs.end() - remainder);
+	_remain.assign(_nbrs.end() - remainder, _nbrs.end());
 printVec("----trimNbrs", trimNbrs);
-
-	int idxbEnd = calcStartIdxForSwap(level) + 1;
-std::cout << "idxbEnd: " << idxbEnd << "\n";
-	_b.assign(trimNbrs.begin(), trimNbrs.begin() + idxbEnd);
-	_a.assign(trimNbrs.begin() + idxbEnd, trimNbrs.end());
-
-printVec("-----------------_a", _a);
-printVec("-----------------_b", _b);
-
-	_mainChain = concatVecs2(_b, _a);
-printVec("-----------------_mainChain", _mainChain);
-
+	while (!trimNbrs.empty())
+	{
+		if (trimNbrs.size() >= 2)
+		{	_b.insert(_b.end(), trimNbrs.begin(), trimNbrs.begin() + 2);
+			trimNbrs.erase(trimNbrs.begin(), trimNbrs.begin() + 2);
+		}
+		if (trimNbrs.size() >= 2)
+		{
+			_a.insert(_a.end(), trimNbrs.begin(), trimNbrs.begin() + 2);
+			trimNbrs.erase(trimNbrs.begin(), trimNbrs.begin() + 2);
+		}
+	}
+	_mainChain = _a;
+	printVec("-----------------_a", _a);
+	printVec("-----------------_b", _b);
+	printVec("-----------------_remain", _remain);
+	printVec("-----------------_mainChain", _mainChain);
+	std::cout << "DEBUG _jacobsthalNbrs.size: " << _jacobsthalNbrs.size() << std::endl;
+for (size_t i = 2; i < _jacobsthalNbrs.size(); i++)
+{
+	if (i == 2)
+	{
+		_mainChain.insert(_mainChain.begin(), _b.begin(), _b.begin() + 2);
+		_b.erase(_b.begin(), _b.begin() + 2);
+		printVec("DEBUG-----------------_a", _a);
+		printVec("-----------------_b", _b);
+		printVec("-----------------_remain", _remain);
+		printVec("-----------------_mainChain", _mainChain);
+	}
+	std::cout << "_jacobsthalNbrs: " << _jacobsthalNbrs[i] << std::endl;
+}
 
 	
+	
+// 	int idxbEnd = calcStartIdxForSwap(level) + 1;
+// std::cout << "idxbEnd: " << idxbEnd << "\n";
+
+// 	_b.assign(trimNbrs.begin(), trimNbrs.begin() + idxbEnd);
+// 	_a.assign(trimNbrs.begin() + idxbEnd, trimNbrs.end());
+
+
+
+
+
+
+	// binInsertMainChain(level - 1);
 }
