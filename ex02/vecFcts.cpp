@@ -43,6 +43,7 @@ int calcStartIdxForSwap(int level)
 	}
 	return idx;
 }
+
 std::vector<unsigned int> PmergeMe::pairCompSwap(std::vector<unsigned int> vec, int level)
 {
 // std::cout << "level: " << level << std::endl;

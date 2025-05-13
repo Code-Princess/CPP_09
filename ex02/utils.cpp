@@ -28,7 +28,7 @@ void PmergeMe::createJacobsthalNbrs()
 			_jacobsthalNbrs.push_back(nextNbr);
 			i++;
 		}
-	printVec("_jacobsthalNbrs", _jacobsthalNbrs);
+	// printVec("_jacobsthalNbrs", _jacobsthalNbrs);
 }
 
 
