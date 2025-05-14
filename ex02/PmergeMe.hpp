@@ -34,7 +34,7 @@ private:
 	std::vector<unsigned int> concatVecs2(std::vector<unsigned int> vec1, \
 		std::vector<unsigned int> vec2);
 	void generate_a_b_remain_mainChain(int level);
-	void binInsertbToMainChain(int jacobIdx, size_t elem_size);
+	void binInsertbToMainChain(unsigned int jacobIdx, size_t elem_size);
 	
 public:
 	PmergeMe() = delete;
