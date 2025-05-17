@@ -95,14 +95,14 @@ printVec("-----------------_b", _b);
 printVec("-----------------_mainChain", _mainChain);
 for (size_t i = 3; i < _jacobsthalNbrs.size(); ++i)
 {
-		binInsertbToMainChain(_jacobsthalNbrs[i], elem_size);
+	binInsertbToMainChain(_jacobsthalNbrs[i], elem_size);
 }	
 
 }
 
-void PmergeMe::binInsertbToMainChain(unsigned int jacobNbr, size_t elem_size)
+void PmergeMe::binInsertbToMainChain(unsigned int jacobIdx, size_t elem_size)
 {
-	size_t bIdx = jacobNbr;
+	size_t bIdx = jacobIdx;
 	size_t bIdxStart = elem_size * (bIdx - 1);
 
 	std::vector<unsigned int> blockToInsert(_b.begin() + bIdxStart, _b.begin() + bIdxStart + elem_size);
@@ -131,10 +131,13 @@ printVec("----------blockToInsert", blockToInsert);
     printVec(">>> Updated _mainChain", _mainChain);
 
 	bIdx--;
+
 std::cout << "bIdx: " << bIdx<< std::endl;
-	if (bIdx > _jacobsthalNbrs[jacobNbr - 1])
+	
+std::cout << "_jacobsthalNbrs[jacobIdx - 1]: " << _jacobsthalNbrs[jacobIdx - 1] << std::endl;
+	if (bIdx > _jacobsthalNbrs[jacobIdx - 1])
 	{
-		binInsertbToMainChain(jacobNbr - 1, elem_size);
+		binInsertbToMainChain(jacobIdx - 1, elem_size);
 	}
 }
 
