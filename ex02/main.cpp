@@ -27,9 +27,9 @@ int main (int argc, char* argv[])
 
 
 	PmergeMe mergeMe(input);
-	printVec("------------Before: ", mergeMe.getInputNbrs());
+	printVec("Before: ", mergeMe.getInputNbrs());
 	mergeMe.sort();
-	printVec("------------After: ", mergeMe.getNbrs());
+	printVec("After: ", mergeMe.getNbrs());
 
 	const std::vector<unsigned int>& vec_sorted = mergeMe.getNbrs();
 	if (std::is_sorted(vec_sorted.begin(), vec_sorted.end()))

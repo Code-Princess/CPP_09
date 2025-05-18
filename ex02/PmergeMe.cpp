@@ -18,12 +18,10 @@
 PmergeMe::PmergeMe(std::vector<unsigned int> inputNbrs)
 	:	_inputNbrs(inputNbrs)
 {
-	
 }
 
 PmergeMe::~PmergeMe()
 {
-	
 }
 
 const std::vector<unsigned int>& PmergeMe::getNbrs() const
@@ -41,12 +39,12 @@ void PmergeMe::sort()
 	_nbrs = _inputNbrs;
 	int level = 0;
 	createJacobsthalNbrs();
-	recursivePairCompSwap(level);
+	pairCompSwap(level);
 }
 
-void PmergeMe::recursivePairCompSwap(int level)
+void PmergeMe::pairCompSwap(int level)
 {
-	std::cout <<  std::endl << "level: " << level << std::endl;
+	// std::cout <<  std::endl << "level: " << level << std::endl;
 	size_t elem_size = calcStartIdxForSwap(level) + 1;
 	size_t number_elements = _nbrs.size() / elem_size;
 	if (number_elements < 2)
@@ -57,8 +55,7 @@ void PmergeMe::recursivePairCompSwap(int level)
 			std::vector<unsigned int> remainNbrs(_nbrs.begin() + trimNbrs.size(), _nbrs.end());
 			std::vector<unsigned int> pairwiseSorted = pairCompSwap(trimNbrs, level);
 			concatVecs(pairwiseSorted, remainNbrs);
-		printVec("---_nbrs", _nbrs);
-		recursivePairCompSwap(level + 1);
+		pairCompSwap(level + 1);
 	}
 	if (level != 0)
 		generate_a_b_remain_mainChain(level - 1);
@@ -67,17 +64,17 @@ void PmergeMe::recursivePairCompSwap(int level)
 
 void PmergeMe::generate_a_b_remain_mainChain(int level)
 {
-	std::cout << std::endl << std::endl << "level: " << level << std::endl;
+	// std::cout << std::endl << std::endl << "level: " << level << std::endl;
 	size_t elem_size = calcStartIdxForSwap(level) + 1;
-	std::cout << std::endl <<  "elem_size: " << elem_size << std::endl;
+	// std::cout << std::endl <<  "elem_size: " << elem_size << std::endl;
 	size_t number_elements = _nbrs.size() / elem_size;
 	if (number_elements <= 2)
 		return;
 	int remainder = _nbrs.size() % elem_size;
 	std::vector<unsigned int> trimNbrs(_nbrs.begin(), _nbrs.end() - remainder);
 	_remain.assign(_nbrs.end() - remainder, _nbrs.end());
-printVec("----trimNbrs", trimNbrs);
-printVec("-----------------_remain", _remain);
+// printVec("----trimNbrs", trimNbrs);
+// printVec("-----------------_remain", _remain);
 while (!trimNbrs.empty())
 {
 	if (trimNbrs.size() >= elem_size)
@@ -92,11 +89,11 @@ while (!trimNbrs.empty())
 	}
 }
 _mainChain = _a;
-printVec("-----------------_a", _a);
-printVec("-----------------_b", _b);
+// printVec("-----------------_a", _a);
+// printVec("-----------------_b", _b);
 _mainChain.insert(_mainChain.begin(), _b.begin(), _b.begin() + elem_size);
 
-printVec("-----------------_mainChain", _mainChain);
+// printVec("-----------------_mainChain", _mainChain);
 binInsertbToMainChain(elem_size);
 // append rest to a
 _mainChain.insert(_mainChain.end(), _remain.begin(), _remain.end());
@@ -127,7 +124,7 @@ void PmergeMe::binInsertbToMainChain(size_t elem_size)
 			
 			std::vector<unsigned int> blockToInsert(_b.begin() + bIdxStart, _b.begin() + bIdxStart + elem_size);
 			unsigned int nbrToComp = blockToInsert.back();
-			printVec("----------blockToInsert", blockToInsert);
+			// printVec("----------blockToInsert", blockToInsert);
 			size_t left = 0;
 			size_t right = _mainChain.size() / elem_size;
 			
@@ -147,14 +144,14 @@ void PmergeMe::binInsertbToMainChain(size_t elem_size)
 			
 			_mainChain.insert(_mainChain.begin() + insertPos, blockToInsert.begin(), blockToInsert.end());
 			
-			std::cout << "Inserted block at position: " << insertPos << std::endl;
-			printVec(">>> Updated _mainChain", _mainChain);
+			// std::cout << "Inserted block at position: " << insertPos << std::endl;
+			// printVec(">>> Updated _mainChain", _mainChain);
 			
 			bIdx--;
 			
-			std::cout << "bIdx: " << bIdx<< std::endl;
+			// std::cout << "bIdx: " << bIdx<< std::endl;
 			
-			std::cout << "_jacobsthalNbrs[jacobIdx - 1]: " << _jacobsthalNbrs[jacobIdx - 1] << std::endl;
+			// std::cout << "_jacobsthalNbrs[jacobIdx - 1]: " << _jacobsthalNbrs[jacobIdx - 1] << std::endl;
 		}
 	}
 }
