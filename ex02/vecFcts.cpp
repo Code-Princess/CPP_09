@@ -50,6 +50,7 @@ std::vector<unsigned int> PmergeMe::pairCompSwap(std::vector<unsigned int> vec, 
 	int	idxSwap = calcStartIdxForSwap(level);
 	for (size_t i = idxSwap; i + stepWidth <= vec.size(); i += (2 * stepWidth))
 	{
+		_comps++;
 		if (vec[i] > vec[i + stepWidth])
 			std::swap_ranges(vec.begin() + i - (stepWidth - 1), vec.begin() + i + 1, vec.begin() + i + 1);
 	}

@@ -56,10 +56,10 @@ int main (int argc, char* argv[])
 
 	const std::vector<unsigned int>& vec_sorted = mergeMe.getNbrs();
 	if (std::is_sorted(vec_sorted.begin(), vec_sorted.end()))
-	std::cout << "The vector is sorted in ascending order." << std::endl;
+		std::cout << "The vector is sorted in ascending order," << std::endl;
     else
-	std::cout << "The vector is not sorted." << std::endl;
-	
+		std::cout << "The vector is not sorted, " << std::endl;
+	std::cout << "using " << mergeMe.getComps() << " comparisons.\n";
 	auto end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double, std::micro> duration = end - start;
 	std::cout << "Time to process a range of " << mergeMe.getNbrs().size() << 

@@ -24,6 +24,8 @@ private:
 	std::vector<unsigned int> _a;
 	std::vector<unsigned int> _b;
 	std::vector<unsigned int> _remain;
+	std::vector<unsigned int>			_a_idxs;
+	int							_comps{0};
 
 
 	void createJacobsthalNbrs();
@@ -34,7 +36,12 @@ private:
 	std::vector<unsigned int> concatVecs2(std::vector<unsigned int> vec1, \
 		std::vector<unsigned int> vec2);
 	void generate_a_b_remain_mainChain(int level);
+	void generate_a_idxs(unsigned int number_elements);
 	void binInsertbToMainChain(size_t elem_size);
+	size_t	findInsertPosition(size_t bIdx, unsigned int nbrToComp, size_t elem_size);
+	void 	update_a_idxs(int insertPos);
+
+	// size_t	findInsertPosition(size_t bIdx, size_t elem_size);
 	
 public:
 	PmergeMe() = delete;
@@ -46,6 +53,7 @@ public:
 
 	std::vector<unsigned int> getInputNbrs();
 	const std::vector<unsigned int>& getNbrs() const;
+	int	getComps();
 
 	void preSort();
 	
