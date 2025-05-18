@@ -27,11 +27,13 @@ int main (int argc, char* argv[])
 
 
 	PmergeMe mergeMe(input);
-	printVec("------------Before: ", mergeMe.getNbrs());
+	printVec("------------Before: ", mergeMe.getInputNbrs());
 	mergeMe.sort();
 	printVec("------------After: ", mergeMe.getNbrs());
-	if (std::is_sorted(mergeMe.getNbrs().begin(), mergeMe.getNbrs().end()))
-        std::cout << "The vector is sorted in non-decreasing order." << std::endl;
+
+	const std::vector<unsigned int>& vec_sorted = mergeMe.getNbrs();
+	if (std::is_sorted(vec_sorted.begin(), vec_sorted.end()))
+        std::cout << "The vector is sorted in ascending order." << std::endl;
     else
         std::cout << "The vector is not sorted." << std::endl;
 	
