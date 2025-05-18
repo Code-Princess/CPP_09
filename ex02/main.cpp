@@ -51,7 +51,7 @@ int main (int argc, char* argv[])
 	
 	PmergeMe mergeMe(input);
 	printVec("Before: ", mergeMe.getInputNbrs());
-	mergeMe.sort();
+	mergeMe.preSort();
 	printVec("After: ", mergeMe.getNbrs());
 
 	const std::vector<unsigned int>& vec_sorted = mergeMe.getNbrs();

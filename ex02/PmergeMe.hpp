@@ -27,7 +27,7 @@ private:
 
 
 	void createJacobsthalNbrs();
-	void pairCompSwap(int level);
+	void sort(int level);
 	std::vector<unsigned int> trimToEvenCount(int level);
 	std::vector<unsigned int> pairCompSwap(std::vector<unsigned int> vec, int level);
 	void concatVecs(std::vector<unsigned int> vec1, std::vector<unsigned int> vec2);
@@ -47,7 +47,7 @@ public:
 	std::vector<unsigned int> getInputNbrs();
 	const std::vector<unsigned int>& getNbrs() const;
 
-	void sort();
+	void preSort();
 	
 };
 void printVec(std::string vecName, std::vector<unsigned int> vec);
