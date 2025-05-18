@@ -43,14 +43,15 @@ public:
 	
 	PmergeMe(std::vector<unsigned int> inputNbrs);
 	~PmergeMe();
-	std::vector<unsigned int> getInputNbrs();
 
+	std::vector<unsigned int> getInputNbrs();
 	const std::vector<unsigned int>& getNbrs() const;
-	
+
 	void sort();
 	
 };
 void printVec(std::string vecName, std::vector<unsigned int> vec);
 int calcStartIdxForSwap(int level);
+bool isPositiveInteger(const std::string& str);
 
 #endif

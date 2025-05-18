@@ -28,7 +28,17 @@ void PmergeMe::createJacobsthalNbrs()
 			_jacobsthalNbrs.push_back(nextNbr);
 			i++;
 		}
-	// printVec("_jacobsthalNbrs", _jacobsthalNbrs);
+}
+
+bool isPositiveInteger(const std::string& str) 
+{
+    if (str.empty()) 
+		return false;
+    for (char c : str) {
+        if (!std::isdigit(c)) 
+		return false;
+    }
+    return true;
 }
 
 
