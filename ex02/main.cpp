@@ -54,11 +54,11 @@ int main (int argc, char* argv[])
 	mergeMe.sort();
 	printVec("After: ", mergeMe.getNbrs());
 
-	// const std::vector<unsigned int>& vec_sorted = mergeMe.getNbrs();
-	// if (std::is_sorted(vec_sorted.begin(), vec_sorted.end()))
-	// std::cout << "The vector is sorted in ascending order." << std::endl;
-    // else
-	// std::cout << "The vector is not sorted." << std::endl;
+	const std::vector<unsigned int>& vec_sorted = mergeMe.getNbrs();
+	if (std::is_sorted(vec_sorted.begin(), vec_sorted.end()))
+	std::cout << "The vector is sorted in ascending order." << std::endl;
+    else
+	std::cout << "The vector is not sorted." << std::endl;
 	
 	auto end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double, std::micro> duration = end - start;

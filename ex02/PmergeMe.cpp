@@ -44,7 +44,6 @@ void PmergeMe::sort()
 
 void PmergeMe::pairCompSwap(int level)
 {
-	// std::cout <<  std::endl << "level: " << level << std::endl;
 	size_t elem_size = calcStartIdxForSwap(level) + 1;
 	size_t number_elements = _nbrs.size() / elem_size;
 	if (number_elements < 2)
@@ -64,17 +63,13 @@ void PmergeMe::pairCompSwap(int level)
 
 void PmergeMe::generate_a_b_remain_mainChain(int level)
 {
-	// std::cout << std::endl << std::endl << "level: " << level << std::endl;
 	size_t elem_size = calcStartIdxForSwap(level) + 1;
-	// std::cout << std::endl <<  "elem_size: " << elem_size << std::endl;
 	size_t number_elements = _nbrs.size() / elem_size;
 	if (number_elements <= 2)
 		return;
 	int remainder = _nbrs.size() % elem_size;
 	std::vector<unsigned int> trimNbrs(_nbrs.begin(), _nbrs.end() - remainder);
 	_remain.assign(_nbrs.end() - remainder, _nbrs.end());
-// printVec("----trimNbrs", trimNbrs);
-// printVec("-----------------_remain", _remain);
 while (!trimNbrs.empty())
 {
 	if (trimNbrs.size() >= elem_size)
@@ -89,15 +84,9 @@ while (!trimNbrs.empty())
 	}
 }
 _mainChain = _a;
-// printVec("-----------------_a", _a);
-// printVec("-----------------_b", _b);
 _mainChain.insert(_mainChain.begin(), _b.begin(), _b.begin() + elem_size);
-
-// printVec("-----------------_mainChain", _mainChain);
 binInsertbToMainChain(elem_size);
-// append rest to a
 _mainChain.insert(_mainChain.end(), _remain.begin(), _remain.end());
-// move a to nbrs
 _nbrs = std::move(_mainChain);
 _a.clear();
 _b.clear();
@@ -110,48 +99,33 @@ void PmergeMe::binInsertbToMainChain(size_t elem_size)
 		size_t bIdx = _jacobsthalNbrs[jacobIdx];
 		while (true) {
 			if (bIdx <= _jacobsthalNbrs[jacobIdx - 1])
-			{
-// std::cout << "bIdx too small\n";
 				break ;
-			}
 			if (bIdx * elem_size > _b.size()) 
 			{
 				bIdx--;
-// std::cout << "bIdx too large\n";
 				continue ;
 			}
 			size_t bIdxStart = elem_size * (bIdx - 1);
-			
 			std::vector<unsigned int> blockToInsert(_b.begin() + bIdxStart, _b.begin() + bIdxStart + elem_size);
 			unsigned int nbrToComp = blockToInsert.back();
-			// printVec("----------blockToInsert", blockToInsert);
 			size_t left = 0;
 			size_t right = _mainChain.size() / elem_size;
 			
 			size_t insertPos = 0;
 			
-			while (left < right) {
+			while (left < right) 
+			{
 				size_t mid = (left + right) / 2;
 				unsigned int midVal = _mainChain[(mid + 1) * elem_size - 1];
-				
 				if (nbrToComp < midVal) 
-				right = mid;
+					right = mid;
 				else 
-				left = mid + 1;
+					left = mid + 1;
 			}
 			
 			insertPos = left * elem_size;
-			
 			_mainChain.insert(_mainChain.begin() + insertPos, blockToInsert.begin(), blockToInsert.end());
-			
-			// std::cout << "Inserted block at position: " << insertPos << std::endl;
-			// printVec(">>> Updated _mainChain", _mainChain);
-			
 			bIdx--;
-			
-			// std::cout << "bIdx: " << bIdx<< std::endl;
-			
-			// std::cout << "_jacobsthalNbrs[jacobIdx - 1]: " << _jacobsthalNbrs[jacobIdx - 1] << std::endl;
 		}
 	}
 }
