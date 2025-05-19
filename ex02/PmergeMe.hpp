@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 22:34:44 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/05/07 22:29:45 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/05/19 21:56:51 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@
 
 class PmergeMe {
 private:
-	std::vector<unsigned int> _inputNbrs;
-	std::vector<unsigned int> _nbrs;
-	std::vector<unsigned int> _jacobsthalNbrs;
-	std::vector<unsigned int> _mainChain;
-	std::vector<unsigned int> _a;
-	std::vector<unsigned int> _b;
-	std::vector<unsigned int> _remain;
-	std::vector<unsigned int>			_a_idxs;
+	std::vector<unsigned int> 	_inputNbrs;
+	std::vector<unsigned int> 	_nbrs;
+	std::vector<unsigned int> 	_jacobsthalNbrs;
+	std::vector<unsigned int> 	_mainChain;
+	std::vector<unsigned int> 	_a;
+	std::vector<unsigned int> 	_b;
+	std::vector<unsigned int> 	_remain;
+	std::vector<unsigned int>	_a_idxs;
 	int							_comps{0};
 
 
@@ -41,8 +41,6 @@ private:
 	size_t	findInsertPosition(size_t bIdx, unsigned int nbrToComp, size_t elem_size);
 	void 	update_a_idxs(int insertPos);
 
-	// size_t	findInsertPosition(size_t bIdx, size_t elem_size);
-	
 public:
 	PmergeMe() = delete;
 	PmergeMe(const PmergeMe& other) = delete;
@@ -54,12 +52,12 @@ public:
 	std::vector<unsigned int> getInputNbrs();
 	const std::vector<unsigned int>& getNbrs() const;
 	int	getComps();
-
 	void preSort();
-	
 };
+
 void printVec(std::string vecName, std::vector<unsigned int> vec);
 int calcStartIdxForSwap(int level);
 bool isPositiveInteger(const std::string& str);
+bool isValidInput(int argc, char* argv[], std::vector<unsigned int>& input);
 
 #endif
