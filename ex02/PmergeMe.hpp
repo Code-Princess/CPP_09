@@ -6,7 +6,7 @@
 /*   By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 22:34:44 by llacsivy          #+#    #+#             */
-/*   Updated: 2025/05/19 21:56:51 by llacsivy         ###   ########.fr       */
+/*   Updated: 2025/05/20 21:23:54 by llacsivy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,6 @@ void printVec(std::string vecName, std::vector<unsigned int> vec);
 int calcStartIdxForSwap(int level);
 bool isPositiveInteger(const std::string& str);
 bool isValidInput(int argc, char* argv[], std::vector<unsigned int>& input);
+bool runSortVec(int argc, char* argv[]);
 
 #endif

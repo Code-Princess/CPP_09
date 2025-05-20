@@ -6,7 +6,7 @@
 #    By: llacsivy <llacsivy@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/12 12:44:18 by llacsivy          #+#    #+#              #
-#    Updated: 2025/05/07 22:26:58 by llacsivy         ###   ########.fr        #
+#    Updated: 2025/05/20 21:08:30 by llacsivy         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,10 @@ CPPFLAGS		:= -Wextra -Wall -Werror -std=c++17 -O3
 SRCS			:= 	main.cpp \
 					PmergeMe.cpp \
 					vecFcts.cpp \
-					utils.cpp
+					utils.cpp \
+					PmergeMeDeque.cpp \
+					vecFctsDeque.cpp \
+					utilsDeque.cpp
 
 OBJS			:=	${SRCS:.cpp=.o}
 
